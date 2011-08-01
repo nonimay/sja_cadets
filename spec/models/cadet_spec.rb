@@ -33,7 +33,7 @@ describe Cadet do
       :street => '33 Lunedale Avenue',
       :town => 'Sunderland',
       :county => 'Tyne and Wear',
-      :postcode => 'SR6 8JX',
+      :postcode => 'SR68JX',
       :mobile => '07951217515',
       :landline => '01915894545',
       :email => "fiona.mcdonald@northumbria.sja.org.uk" }
@@ -170,8 +170,8 @@ describe Cadet do
     it "should accept valid email addresses" do
       addresses = %w[user@foo.com THE_USER@foo.bar.org first.last@foo.jp]
       addresses.each do |address|
-        invalid_email_cadet = Cadet.new(@attr.merge(:email => address))
-        invalid_email_cadet.should be_valid
+        valid_email_cadet = Cadet.new(@attr.merge(:email => address))
+        valid_email_cadet.should be_valid
       end
     end
 
@@ -181,6 +181,11 @@ describe Cadet do
         invalid_email_cadet = Cadet.new(@attr.merge(:email => address))
         invalid_email_cadet.should_not be_valid
       end
+    end
+
+    it "should allow email address to be missing" do
+      valid_email_cadet = Cadet.new(@attr.merge(:email => ''))
+      valid_email_cadet.should be_valid
     end
   end
 
@@ -197,7 +202,7 @@ describe Cadet do
       end
 
       it "should accept valid mobile numbers" do
-        mobiles = %w[07951217515 07951217513 07759647858]
+        mobiles = %w[07951217515 07651217513 07759647858]
         mobiles.each do |mobile|
           valid_mobile_cadet = Cadet.new(@attr.merge(:mobile => mobile))
           valid_mobile_cadet.should be_valid
@@ -214,7 +219,7 @@ describe Cadet do
           invalid_landline_cadet.should_not be_valid
         end
       end
-      
+
       it "should accept valid landline numbers" do
         landlines = %w[01915214785 02057895433 03045258978]
         landlines.each do |landline|
@@ -223,7 +228,7 @@ describe Cadet do
         end
       end
     end
-    
+
     it "should have at least one contact number present" do
       mobile_only_cadet = Cadet.new(@attr.merge(:mobile => ''))
       mobile_only_cadet.should be_valid

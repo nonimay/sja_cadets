@@ -20,8 +20,7 @@
 
 class Cadet < ActiveRecord::Base
   
-  postcode_regex = /^([A-PR-UWYZ][A-HK-Y0-9][A-HJKS-UW0-9]?[A-HJKS-UW0-9]?)\s*([0-9][ABD-HJLN-UW-Z]{2})$/i
-  email_regex = /^\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z$/i
+  has_many :emergency_contacts
   
   validates :firstname, :presence => true, :length => {:maximum => 20}
   validates :lastname, :presence => true, :length => {:maximum => 30}
@@ -29,10 +28,10 @@ class Cadet < ActiveRecord::Base
   validates :street, :presence => true, :length => {:maximum => 200}
   validates :town, :presence => true, :length => {:maximum => 200}
   validates :county, :presence => true, :length => {:maximum => 100}
-  validates :postcode, :presence => true, :format => {:with => postcode_regex}
-  validates :email, :presence => true, :format => {:with => email_regex}
+  validates :postcode, :format => /^([A-PR-UWYZ][A-HK-Y0-9][A-HJKS-UW0-9]?[A-HJKS-UW0-9]?)\s*([0-9][ABD-HJLN-UW-Z]{2})$/i
   validate :dob_is_in_range, :on => :create
   validate :contact_numbers
+  validate :email_format
   
   
   
@@ -47,4 +46,9 @@ class Cadet < ActiveRecord::Base
     return errors.add(:landline, "Home telephone number is invalid") unless landline.blank? || landline =~ /^0(1|2|3)\d{9}$/
     return errors.add(:mobile, "Mobile number is invalid") unless mobile.blank? || mobile =~ /^07[5-9]\d{8}$/
   end 
+  
+  def email_format
+    errors.add(:email, "Ivalid email format") unless email.blank? || email =~ /^\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z$/i
+  end
+  
 end

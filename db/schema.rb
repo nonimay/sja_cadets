@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110720091725) do
+ActiveRecord::Schema.define(:version => 20110720102612) do
 
   create_table "cadets", :force => true do |t|
     t.integer  "member_number"
@@ -27,5 +27,16 @@ ActiveRecord::Schema.define(:version => 20110720091725) do
     t.string   "landline"
     t.string   "mobile"
   end
+
+  create_table "emergency_contacts", :force => true do |t|
+    t.string   "name"
+    t.string   "number"
+    t.string   "relationship"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "cadet_id"
+  end
+
+  add_index "emergency_contacts", ["cadet_id"], :name => "index_emergency_contacts_on_cadet_id"
 
 end
