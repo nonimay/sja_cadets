@@ -28,12 +28,16 @@ class Cadet < ActiveRecord::Base
   validates :street, :presence => true, :length => {:maximum => 200}
   validates :town, :presence => true, :length => {:maximum => 200}
   validates :county, :presence => true, :length => {:maximum => 100}
-  validates :postcode, :format => /^([A-PR-UWYZ][A-HK-Y0-9][A-HJKS-UW0-9]?[A-HJKS-UW0-9]?)\s*([0-9][ABD-HJLN-UW-Z]{2})$/i
+  validates :postcode, :presence => true, :format => /^([A-PR-UWYZ][A-HK-Y0-9][A-HJKS-UW0-9]?[A-HJKS-UW0-9]?)\s*([0-9][ABD-HJLN-UW-Z]{2})$/i
   validate :dob_is_in_range, :on => :create
   validate :contact_numbers
   validate :email_format
+ 
+  def telephone
+    landline.present? ? landline : mobile
+  end
   
-  
+  private
   
   def dob_is_in_range
     return errors.add(:dob, "DOB must be present") if dob.nil?

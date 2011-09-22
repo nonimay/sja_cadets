@@ -230,12 +230,21 @@ describe Cadet do
     end
 
     it "should have at least one contact number present" do
-      mobile_only_cadet = Cadet.new(@attr.merge(:mobile => ''))
+      mobile_only_cadet = Cadet.new(@attr.merge(:landline => ''))
       mobile_only_cadet.should be_valid
-      landline_only_cadet = Cadet.new(@attr.merge(:landline => ''))
+      landline_only_cadet = Cadet.new(@attr.merge(:mobile => ''))
       landline_only_cadet.should be_valid
       no_phone_cadet = Cadet.new(@attr.merge(:mobile => '', :landline => ''))
       no_phone_cadet.should_not be_valid
     end
+  end
+
+  it "should return the home number as a default otherwise mobile number" do
+    both_numbers_cadet = Cadet.new(@attr)
+    both_numbers_cadet.telephone.should == both_numbers_cadet.landline
+    mobile_only_cadet = Cadet.new(@attr.merge(:landline => ''))
+    mobile_only_cadet.telephone.should == mobile_only_cadet.mobile
+    landline_only_cadet = Cadet.new(@attr.merge(:mobile => ''))
+    landline_only_cadet.telephone.should == landline_only_cadet.landline
   end
 end
